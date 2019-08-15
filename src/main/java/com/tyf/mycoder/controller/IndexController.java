@@ -1,0 +1,12 @@
+package com.tyf.mycoder.controller;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+@Controller
+public class IndexController {
+    @RequestMapping("/")
+    public String toCoder(){
+        return "codemaker";
+    }
+}

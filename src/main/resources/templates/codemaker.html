@@ -1,0 +1,227 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <title>code maker</title>
+    
+	<meta http-equiv="pragma" content="no-cache">
+	<meta http-equiv="cache-control" content="no-cache">
+	<meta http-equiv="expires" content="0">    
+	<meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
+	<meta http-equiv="description" content="This is my page">
+	
+	<link th:href="@{/css/bootstrap.min.css}"  rel="stylesheet">
+    <link th:href="@{/css/animate.min.css}"  rel="stylesheet">
+    <link th:href="@{/css/font-awesome.min.css}"  rel="stylesheet">
+    <link th:href="@{/css/form.css}"  rel="stylesheet">
+    <link th:href="@{/css/calendar.css}"  rel="stylesheet">
+    <link th:href="@{/css/style.css}"  rel="stylesheet">
+    <link th:href="@{/css/icons.css}"  rel="stylesheet">
+    <link th:href="@{/css/generics.css}" rel="stylesheet">
+	
+
+  </head>
+  
+<body id="skin-blur-blue">
+	<header id="header" class="media"><!-- javascript:void(0); -->
+       <a href="javascript:void(0);" id="menu-toggle" style="display: none"></a>
+       <a class="logo pull-left" href="javascript:void(0);">CODE MAKER 1.0</a>
+       
+       <div class="media-body">
+           <div class="media" id="top-menu">
+               <div id="time" class="pull-right">
+                   <span id="hours"></span>
+                   :
+                   <span id="min"></span>
+                   :
+                   <span id="sec"></span>
+               </div>
+           </div>
+       </div>
+	</header>
+    <div class="clearfix"></div>
+    <section id="main" class="p-relative" role="main">
+   		<section id="content" class="container">
+   			<h4 class="page-title">代码生成配置</h4>
+   			<div class="block-area" id="minmax">
+	            <h3 class="block-title">数据库连接配置</h3>
+	            <form role="form" class="form-validation-9">
+	            	<div class="row">
+	            		<div class="form-group col-md-6">
+		                	<p>数据库类型</p>
+	                        <label class="radio-inline">
+	                            <span class="checkableBox checkableBox-radio">    
+	                                <input type="radio"  name="databaseType" value="0" checked  disabled>
+	                            </span>
+	                            mysql
+	                        </label>
+	                        <!--<label class="radio-inline">
+	                            <span class="checkableBox checkableBox-radio"> 
+	                                <input type="radio"  name="databaseType" value="1"    disabled>
+	                            </span>
+	                            sqlserver
+	                        </label>-->
+                        </div>
+	            	</div>
+	                <div class="row">
+	                    <!-- Minimum Character -->
+	                    <div class="form-group col-md-6">
+	                        <label>数据库连接地址</label>
+	                        <input type="text" id="database_ip" class="input-sm  form-control" placeholder="ip">
+	                    </div>
+	                    
+	                    <!-- Maximum Character -->
+	                    <div class="form-group col-md-6">
+	                        <label>数据库名</label>
+	                        <input type="text" id="database_name" class="input-sm  form-control" placeholder="">
+	                    </div>
+	                    
+	                    <!-- Minimum Integer -->
+	                    <div class="form-group col-md-6">
+	                        <label>用户名</label>
+	                        <input type="text" id="username" class="input-sm  form-control" placeholder="">
+	                    </div>
+	                    
+	                    <!-- Maximum Integer -->
+	                    <div class="form-group m-b-15 col-md-6">
+	                        <label>密码</label>
+	                        <input type="text" id="password" class="input-sm  form-control" placeholder="">
+	                    </div>
+	                </div>
+	
+	                <input class="btn btn-sm" type="button" value="保存配置---初始化数据表" onclick='saveDatabaseSet();'>
+	            </form>
+	        </div>
+	        <hr class="whiter m-t-20" /> 
+	        <div class="block-area" >
+	            <h3 class="block-title">代码文件配置</h3>
+	            <form role="form" class="form-validation-9" th:action="@{/codemaker/createFiles}"  method="post" id="code_form">
+	            	<div class="row">
+	            		<div class="form-group col-md-12" id='select_div'>
+                        </div>
+	            	</div>
+	            	<br>
+	                <div class="row">
+                        <div class="form-group m-b-15 col-md-6">
+                            <label>项目名称</label>
+                            <input type="text" id="project" class="input-sm  form-control" placeholder="">
+                        </div>
+                        <div class="form-group m-b-15 col-md-6">
+                            <label>文件保存路径</label>
+                            <input type="text" id="savedir" class="input-sm  form-control" placeholder="">
+                        </div>
+	               		<div class="form-group col-md-12">
+		                    <p>选择生成的文件类型</p>
+	                        <div class="form-group m-b-15">
+	                            <label class="checkbox-inline">
+	                                <span class="checkableBox">
+	                                    <input type="checkbox" class="validate[minCheckbox[1]]" name="fileType" id="inlineCheckbox1" value="1"> 
+	                                </span>
+	                                entity
+	                            </label>
+	                            <label class="checkbox-inline">
+	                                <span class="checkableBox">
+	                                    <input type="checkbox" class="validate[minCheckbox[1]]" name="fileType" id="inlineCheckbox2" value="2"> 
+	                                 </span>
+	                                controller
+	                            </label>
+	                            <label class="checkbox-inline">
+	                                <span class="checkableBox">
+	                                    <input type="checkbox" class="validate[minCheckbox[1]]" name="fileType" id="inlineCheckbox3" value="3"> 
+	                                </span>
+	                                service
+	                            </label>
+	                            <label class="checkbox-inline">
+	                                <span class="checkableBox">
+	                                    <input type="checkbox" class="validate[minCheckbox[1]]" name="fileType" id="inlineCheckbox4" value="4"> 
+	                                </span>
+	                                dao
+	                            </label>
+	                            <label class="checkbox-inline">
+	                                <span class="checkableBox">
+	                                    <input type="checkbox" class="validate[minCheckbox[1]]" name="fileType" id="inlineCheckbox5" value="5"> 
+	                                </span>
+	                                js
+	                            </label>
+	                            <label class="checkbox-inline">
+	                                <span class="checkableBox">
+	                                    <input type="checkbox" class="validate[minCheckbox[1]]" name="fileType" id="inlineCheckbox6" value="6"> 
+	                                </span>
+	                                jsp
+	                            </label>
+	                        </div>
+                        </div>
+                        <input type="hidden" name="tables" id='form_tables'>
+                        <input type="hidden" name="fileTypes" id='form_fileTypes'>
+	                </div>
+	                <input class="btn btn-sm" type="button" value="生成文件" onclick='createFiles();'>
+	            </form>
+	        </div>
+	        <hr class="whiter m-t-20" /> 
+   		</section>
+   		
+   		
+   		
+   		
+   		
+	</section>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	<!--getScheme()获取协议，getServerName()获取服务器名，getServerPort()服务器端口，getContextPath() APP根路径-->
+	<a th:href="${#httpServletRequest.getScheme() + '://' + #httpServletRequest.getServerName() + ':' + #request.getServerPort()  + #request.getContextPath() + '/'} "
+	   id="contextPath" style="display: none"></a>
+    
+    <script th:src="@{/js/jquery.min.js}"></script> <!-- jQuery Library -->
+    <script>
+        /*获取应用的根目录，我的绝对路径是*/
+        var basepath = $('#contextPath').attr('href');
+    </script>
+    <!-- Bootstrap -->
+    <script th:src="@{/js/bootstrap.min.js}"></script>
+    <!--  Form Related -->
+    <script th:src="@{/js/validation/validate.min.js}"></script> <!-- jQuery Form Validation Library -->
+    <script th:src="@{/js/validation/validationEngine.min.js}"></script> <!-- jQuery Form Validation Library - requirred with above js -->
+    <script th:src="@{/js/icheck.js}"></script> <!-- Custom Checkbox + Radio -->
+    <script th:src="@{/js/select.min.js}"></script> <!-- Custom Select -->
+    <script th:src="@{/js/chosen.min.js}"></script> <!-- Custom Multi Select -->
+    <script th:src="@{/js/datetimepicker.min.js}"></script> <!-- Date & Time Picker -->
+    <script th:src="@{/js/icheck.js}"></script> <!-- Custom Checkbox + Radio -->
+    <script th:src="@{/js/autosize.min.js}"></script> <!-- Textare autosize -->
+    <script th:src="@{/js/toggler.min.js}"></script> <!-- Toggler -->
+    <script th:src="@{/js/input-mask.min.js}"></script> <!-- Input Mask -->
+    <script th:src="@{/js/spinner.min.js}"></script> <!-- Spinner -->
+    <script th:src="@{/js/slider.min.js}"></script> <!-- Input Slider -->
+    <script th:src="@{/js/fileupload.min.js}"></script> <!-- File Upload -->
+    <!-- UX -->
+    <script th:src="@{/js/scroll.min.js}"></script> <!-- Custom Scrollbar -->
+    <!-- Other -->
+    <script th:src="@{/js/calendar.min.js}"></script> <!-- Calendar -->
+    <script th:src="@{/js/feeds.min.js}"></script> <!-- News Feeds -->
+    <!-- All JS functions -->
+    <script  th:src="@{/js/functions.js}"></script>
+    
+    <script th:src="@{/js/codeMaker/codemaker.js}" ></script>
+    <script >
+        $(function(){
+            $('#menu-toggle').click();
+        })
+
+    </script>
+
+  </body>
+</html>
