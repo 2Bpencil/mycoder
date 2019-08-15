@@ -1,175 +1,152 @@
-package com.${project}.controller;
+package com.tyf.mqas.code.controller;
 
-import java.io.IOException;
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
+import com.tyf.mqas.base.datapage.DataPage;
+import com.tyf.mqas.code.entity.${entityName};
+import com.tyf.mqas.code.service.${entityName}Service;
+import com.tyf.mqas.utils.SecurityUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import javax.validation.Valid;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import com.${project}.entity.User;
-import com.${project}.base.util.SecurityUtils;
-import com.${project}.base.page.Page;
-import com.${project}.base.page.SearchFilter;
-import com.${project}.base.util.SearchUtils;
-import com.${project}.entity.${entityName};
-import com.${project}.service.${entityName}Service;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.util.Map;
+
+
+/**
+
+/**
+ * @ClassName ${entityName}Controller
+ * @Description: TODO
+ * @Author tyf
+ * @Date ${datetime}
+ * @Version V1.0
+ **/
 @Controller
 @RequestMapping("/${entityNameLower}")
 public class ${entityName}Controller {
-	private static final Logger logger = LoggerFactory.getLogger(${entityName}Controller.class);
-	
-	@Autowired
-	private ${entityName}Service ${entityNameLower}Service;
 
-	/**
-	 *
-	 * @Description:
-	 * @return String
-	 * @throws
-	 * @author tyf
-	 * @date ${datetime}
-	 */
-	@RequestMapping(value="to${entityName}",method=RequestMethod.GET)
-	public String to${entityName}(){
-		return "${entityNameLower}";
-	}
+    private final static Logger logger = LoggerFactory.getLogger(${entityName}Controller.class);
 
-	/**
-	 *
-	 * @Description: 获取实体列表
-	 * @param request
+    @Autowired
+    private ${entityName}Service ${entityNameLower}Service;
+
+    @RequestMapping(value = "${entityNameLower}Manage",method = RequestMethod.GET)
+    public String ${entityNameLower}Manage(){
+        return "/system/${entityNameLower}";
+    }
+
+    /**
+     * 分页查询
+     * @param request
      * @param response
-	 * @return void
-	 * @throws
-	 * @author tyf
-	 * @date ${datetime}
-	 */
-	@RequestMapping(value = "getPages", method = RequestMethod.POST)
-	public void getPages(Page<${entityName}> pages,HttpServletRequest request, HttpServletResponse response){//列表展示
-		List<SearchFilter> filterlist = SearchUtils.getParametersStartingWith(request, "search");
-		String pageJson = ${entityNameLower}Service.getPages(pages, filterlist);
-		try {
-			response.getWriter().print(pageJson);
-
-		} catch (IOException e) {
-
-			e.printStackTrace();
-		}
-	}
-
-
-
-
-	
-	@RequestMapping(value="saveOrUpdate",method=RequestMethod.POST)
-	public void saveOrUpdate(@Valid @ModelAttribute("${entityNameLower}")${entityName} ${entityNameLower} ,HttpServletRequest request,HttpServletResponse response){//新增、编辑
-		int flag = 1;
-		String str = "";
-		if(${entityNameLower}.getId()==null){
-			str = "新增";
-			//TODO
-		}else{
-			str = "修改";
-			//TODO
-		}
-		try {
-			${entityNameLower}Service.saveOrUpdate(${entityNameLower});
-            logger.info(opretion+"*********", SecurityUtils.getCurUserName(), "成功", "1");
-		} catch (Exception e) {
-			flag = 0;
-            logger.info(opretion+"*********", SecurityUtils.getCurUserName(), "失败", "1");
+     */
+    @RequestMapping(value = "getTableJson",method = RequestMethod.GET)
+    public void getTableJson(HttpServletRequest request, HttpServletResponse response){
+        Map<String,String[]> parameterMap = request.getParameterMap();
+        DataPage<${entityName}> pages = ${entityNameLower}Service.getDataPage(parameterMap);
+        String json = JSONObject.toJSONString(pages);
+        try {
+            response.getWriter().print(json);
+        } catch (IOException e) {
             e.printStackTrace();
-		}
-		try {
-			response.getWriter().print(flag);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-    /**
-    *
-    * @Description: 删除
-    * @param  request
-    * @param  response
-    * @return void
-    * @throws
-    * @author tyf
-    * @date ${datetime}
-    */
-	@RequestMapping(value = "deleteEntity", method = RequestMethod.POST)
-	public void deleteEntity(HttpServletRequest request, HttpServletResponse response){//删除
-		int flag = 1;
-		String ids = request.getParameter("ids");
-		try {
-			${entityNameLower}Service.deleteEntity(ids);
-            logger.info("执行删除", SecurityUtils.getCurUserName(), "成功", "1");
-		} catch (Exception e) {
-            logger.info("执行删除", SecurityUtils.getCurUserName(), "失败", "1");
-            flag = 0;
-			e.printStackTrace();
-		}
-		try {
-			response.getWriter().print(flag);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-    /**
-    *
-    * @Description: 获取实体详细信息
-    * @param  request
-    * @param  response
-    * @return void
-    * @throws
-    * @author tyf
-    * @date ${datetime}
-    */
-	@RequestMapping(value = "getEntityById", method = RequestMethod.POST)
-	public void getEntityById(HttpServletRequest request, HttpServletResponse response){//编辑用 
-		String id = request.getParameter("id");
-		String json = "";
-		try {
-			 json = ${entityNameLower}Service.getEntityDetailById(Integer.parseInt(id));
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		try {
-			response.getWriter().print(json);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
+        }
+    }
 
     /**
-    *
-    * @Description: 新增或修改时验证是否重复
-    * @param  request
-    * @param  response
-    * @return void
-    * @throws
-    * @author tyf
-    * @date ${datetime}
+    * 保存或者编辑实体
     */
-    @RequestMapping(value="verifyTheRepeat",method=RequestMethod.POST)
-    public void verifyTheRepeat(HttpServletRequest request,HttpServletResponse response){
-        String name = request.getParameter("name");
+    @RequestMapping(value = "saveOrEditEntity",method = RequestMethod.GET)
+    public void saveOrEditEntity(@ModelAttribute("${entityNameLower}") ${entityName} ${entityNameLower}, HttpServletRequest request, HttpServletResponse response){
+        int flag = 1;
+        String oprate = "新增";
+        if(${entityNameLower}.getId()!=null){
+            oprate = "编辑";
+        }
+        try{
+            ${entityNameLower}Service.saveEntity(${entityNameLower});
+            logger.info(SecurityUtil.getCurUserName()+oprate+"角色成功");
+        }catch (Exception e){
+            flag = 0;
+            logger.error(SecurityUtil.getCurUserName()+oprate+"角色失败");
+        }
+        try {
+            response.getWriter().print(flag);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    /**
+    * 获取实体信息
+    * @param request
+    * @param response
+    */
+    @RequestMapping(value = "getEntityInfo",method = RequestMethod.GET)
+    public void getEntityInfo(HttpServletRequest request, HttpServletResponse response){
         String id = request.getParameter("id");
-        boolean isExist = ${entityNameLower}Service.verifyTheRepeat(name, id);
+        ${entityName} ${entityNameLower} = ${entityNameLower}Service.get${entityName}ById(Integer.parseInt(id));
+        String json = JSONObject.toJSONString(${entityNameLower});
+        try {
+            response.getWriter().print(json);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+    * 删除
+    * @param request
+    * @param response
+    */
+    @RequestMapping(value = "delete${entityName}",method = RequestMethod.GET)
+    public void deleteRole(HttpServletRequest request, HttpServletResponse response){
+        int flag = 1;
+        String id = request.getParameter("id");
+        try{
+            ${entityNameLower}Service.delete${entityName}(Integer.parseInt(id));
+            logger.info(SecurityUtil.getCurUserName()+"删除角色成功");
+        }catch (Exception e){
+            flag = 0;
+            logger.error(SecurityUtil.getCurUserName()+"删除角色失败");
+        }
+        try {
+            response.getWriter().print(flag);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+
+
+
+
+    /**
+    * 验证重复
+    * @param request
+    * @param response
+    */
+    @RequestMapping(value = "verifyTheRepeat",method = RequestMethod.GET)
+    public void verifyTheRepeat(HttpServletRequest request, HttpServletResponse response){
+        String authority = request.getParameter("authority");
+        String id = request.getParameter("id");
+        boolean isExist = ${entityNameLower}Service.verifyTheRepeat(authority, id);
         try {
             response.getWriter().print(isExist);
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-	
-}
+
+
+
+ }
