@@ -17,8 +17,11 @@ $(document).ready(function(){
 function showTreeTable() {
     $("#treeTable").empty();
     $.ajax({
-        type : 'GET',
+        type : 'POST',
         url : contextPath + ' ${entityNameLower}/getAll${entityName}s',
+        beforeSend : function(xhr) {
+            xhr.setRequestHeader(header, token);
+        },
         dataType : "json",
         success : function(result) {
             $.TreeTable("treeTable",heads,result);
@@ -45,9 +48,12 @@ function add${entityName}(){
         showModal("${entityNameLower}Modal");
     }else {
         $.ajax({
-            type : "GET",
+            type : "POST",
             data : {id:meid},
             url : contextPath+"${entityNameLower}/getEntityInfo",
+            beforeSend : function(xhr) {
+                xhr.setRequestHeader(header, token);
+            },
             dataType : "json",
             success: function(result){
                 if(result.type == 1){
@@ -68,9 +74,12 @@ function add${entityName}(){
 function save${entityName}(){
 //保存
     $.ajax({
-        type : "GET",
+        type : "POST",
         data : $("#${entityNameLower}Form").serialize(),
         url : contextPath+"${entityNameLower}/saveOrEditEntity",
+        beforeSend : function(xhr) {
+            xhr.setRequestHeader(header, token);
+        },
         dataType : "json",
         success: function(result){
             if(result == 1){
@@ -97,9 +106,12 @@ function edit${entityName}(){
         return;
     }
     $.ajax({
-        type : "GET",
+        type : "POST",
         data : {id:meid},
         url : contextPath+"${entityNameLower}/getEntityInfo",
+        beforeSend : function(xhr) {
+            xhr.setRequestHeader(header, token);
+        },
         dataType : "json",
         success: function(result){
             <#if propertyMapList?exists >
@@ -126,10 +138,13 @@ function delete${entityName}(){
     var node = jQuery('#treeTable').treetable('childs', meid);
     getNodes(node);
     $.ajax({
-        type : "GET",
+        type : "POST",
         data : {ids:ids},
         dataType:"json",
         url : contextPath+"${entityNameLower}/check${entityName}Used",
+        beforeSend : function(xhr) {
+            xhr.setRequestHeader(header, token);
+        },
         success: function(result){
             if(result){
                 swal({
@@ -142,10 +157,13 @@ function delete${entityName}(){
                     closeOnConfirm: false
                 }, function () {
                     $.ajax({
-                        type : "GET",
+                        type : "POST",
                         data : {ids:ids},
                         dataType:"json",
                         url : contextPath+"${entityNameLower}/delete${entityName}",
+                        beforeSend : function(xhr) {
+                            xhr.setRequestHeader(header, token);
+                        },
                         success: function(result){
                             if(result == 1){
                                 ids="";
@@ -189,8 +207,11 @@ function validateData(){
                 maxlength: 20,
                 remote : {//远程地址只能输出"true"或"false"
                     url : contextPath + "${entityNameLower}/verifyTheRepeat",
-                    type : "get",
+                    type : "POST",
                     dataType : "json",//如果要在页面输出其它语句此处需要改为json
+                    beforeSend : function(xhr) {
+                        xhr.setRequestHeader(header, token);
+                    },
                     data : {
                         id : function(){
                             return $("#form_id").val();

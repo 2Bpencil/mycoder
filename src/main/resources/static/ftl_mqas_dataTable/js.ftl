@@ -14,7 +14,10 @@ function initTable(){
         "serverSide": true,     // true表示使用后台分页
         "ajax": {
             "url": contextPath+"${entityNameLower}Table/getTableJson",  // 异步传输的后端接口url
-            "type": "GET"      // 请求方式
+            "type": "POST",      // 请求方式
+            beforeSend : function(xhr) {
+                xhr.setRequestHeader(header, token);
+            },
         },
         "columns": [
             { "data": "id",
@@ -80,8 +83,11 @@ function validateData(){
                 maxlength: 50,
                 remote : {//远程地址只能输出"true"或"false"
                     url : contextPath + "${entityNameLower}/verifyTheRepeat",
-                    type : "get",
+                    type : "POST",
                     dataType : "json",//如果要在页面输出其它语句此处需要改为json
+                    beforeSend : function(xhr) {
+                        xhr.setRequestHeader(header, token);
+                    },
                     data : {
                         id : function(){
                             return $("#form_id").val();
@@ -117,9 +123,12 @@ function validateData(){
 function save${entityName}(){
     //保存
     $.ajax({
-        type : "GET",
+        type : "POST",
         data : $("#${entityNameLower}Form").serialize(),
         url : contextPath+"${entityNameLower}/saveOrEditEntity",
+        beforeSend : function(xhr) {
+            xhr.setRequestHeader(header, token);
+        },
         success: function(result){
             if(result == 1){
                 hideModal('${entityNameLower}Modal');
@@ -138,10 +147,13 @@ function save${entityName}(){
  */
 function edit${entityName}(id){
     $.ajax({
-        type : "GET",
+        type : "POST",
         data : {id:id},
         dataType:"json",
         url : contextPath+"${entityNameLower}/getEntityInfo",
+        beforeSend : function(xhr) {
+            xhr.setRequestHeader(header, token);
+        },
         success: function(result){
             <#if propertyMapList?exists >
                 <#list propertyMapList as value>
@@ -173,10 +185,13 @@ function delete${entityName}(id){
         closeOnConfirm: false
     }, function () {
         $.ajax({
-            type : "GET",
+            type : "POST",
             data : {id:id},
             dataType:"json",
             url : contextPath+"${entityNameLower}/delete${entityName}",
+            beforeSend : function(xhr) {
+                xhr.setRequestHeader(header, token);
+            },
             success: function(result){
                 if(result == 1){
                     reloadTable();
